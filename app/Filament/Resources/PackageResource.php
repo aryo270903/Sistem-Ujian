@@ -53,32 +53,32 @@ class PackageResource extends Resource
                     Forms\Components\Section::make()
                         ->schema([
                             Forms\Components\Repeater::make('questions')
-                            ->relationship('questions')
-                            ->schema([
-                                Forms\Components\Select::make('question_id')
-                                    ->relationship('question', 'question')
-                                    ->label('Soal')
-                                    ->options(function () {
-                                        $questions = Question::all();
-                                        $options = [];
-                        
-                                        foreach ($questions as $question) {
-                                            $isUsed = PackageQuestion::where('question_id', $question->id)->exists();
-                                            if (!$isUsed) {
-                                                $options[$question->id] = strip_tags($question->question); // Hilangkan tag HTML
-                                            }
-                                        }
-                        
-                                        return $options;
-                                    })
-                                    ->disableOptionsWhenSelectedInSiblingRepeaterItems()
-                                    ->getOptionLabelFromRecordUsing(fn ($record) => strip_tags($record->question)) // Menghapus tag HTML
-                                    ->required()
-                                    ->searchable() // Mengaktifkan fitur pencarian
-                                    ->placeholder('Pilih atau cari soal...')
-                                    ->preload() // Menampilkan opsi secara langsung tanpa menunggu pencarian
-                                    ->maxItems(50) // Menampilkan maksimal 50 opsi, selebihnya bisa dicari
-                            ])
+                                ->relationship('questions')
+                                ->schema([
+                                    Forms\Components\Select::make('question_id')
+                                        ->relationship('question', 'question')
+                                        ->label('Soal')
+                                        ->options(function () {
+                                            $questions = Question::all();
+                                            $options = [];
+                                    
+                                            foreach ($questions as $question) {
+            $isUsed = PackageQuestion::where('question_id', $question->id)->exists();
+            if (!$isUsed) {
+                // Hilangkan tag HTML dan karakter "!&nbsp;"
+                $cleanedQuestion = strip_tags($question->question);
+                $cleanedQuestion = str_replace(['!&nbsp;', '&nbsp;'], '', $cleanedQuestion);
+                $options[$question->id] = $cleanedQuestion;
+            }
+        }
+                                    
+                                            return $options;
+                                        })                                    
+                                        ->disableOptionsWhenSelectedInSiblingRepeaterItems()
+                                       ->getOptionLabelFromRecordUsing(fn ($record) => str_replace(['!&nbsp;', '&nbsp;'], '', strip_tags($record->question))) // Menghapus tag HTML dan karakter "!&nbsp;"
+                                        ->required()
+                                        ->searchable()
+                                ])
                         ])
                 ])
         ]);

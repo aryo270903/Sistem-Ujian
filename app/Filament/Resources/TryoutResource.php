@@ -54,6 +54,9 @@ class TryoutResource extends Resource
             if (!$is_super_admin) {
                 $query->where('user_id', Auth::user()->id);
             }
+
+            $query->withSum('tryOutAnswers as score', 'score')
+            ->orderBy('score', 'desc');
         })
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')

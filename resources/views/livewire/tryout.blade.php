@@ -91,6 +91,15 @@
         } else {
             startCountdown(timeLeft, display);
         }
+
+        // Deteksi jika tab tidak aktif atau ditutup
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                if (confirm("Anda akan keluar dari ujian. Apakah Anda ingin menyelesaikan dan mengirim jawaban sekarang?")) {
+                    Livewire.emit('submit');
+                }
+            }
+        });
     });
 
     function startCountdown(duration, display) {
@@ -120,13 +129,4 @@
         });
         window.livewire.emit('disableAll');
     }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        Livewire.on('showSubmitConfirmation', () => {
-            if (confirm("Apakah Anda yakin ingin mengirim jawaban ini? Mohon periksa kembali.")) {
-                Livewire.emit('submit'); // Jika pilih "Ya", panggil submit()
-            }
-        });
-    });
-
 </script>
