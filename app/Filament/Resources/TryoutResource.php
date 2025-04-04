@@ -100,7 +100,22 @@ class TryoutResource extends Resource
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('user_id')
+                ->label('Nama Siswa')
+                ->options(
+                    \App\Models\User::query()
+                        ->orderBy('name')
+                        ->pluck('name', 'id')
+                        ->toArray()
+                ),
+            Tables\Filters\SelectFilter::make('package_id')
+                ->label('Mata Pelajaran')
+                ->options(
+                    \App\Models\Package::query()
+                        ->orderBy('name')
+                        ->pluck('name', 'id')
+                        ->toArray()
+                ),
             ])
             ->actions([
             ])

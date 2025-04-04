@@ -96,6 +96,18 @@
         }
     });
 
+    document.addEventListener('visibilitychange', function () {
+            if (document.hidden) {
+                alert("Anda meninggalkan halaman ujian! Ujian akan dihentikan.");
+                window.livewire.emit('endExam');
+            }
+        });
+
+        window.addEventListener('blur', function () {
+            alert("Anda berpindah jendela! Ujian akan dihentikan.");
+            window.livewire.emit('endExam');
+        });
+
     function startCountdown(duration, display) {
         let timer = duration, hours, minutes, seconds;
         let countdown = setInterval(function() {

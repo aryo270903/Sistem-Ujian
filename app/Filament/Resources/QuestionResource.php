@@ -60,10 +60,12 @@ class QuestionResource extends Resource
                                     ->label('Jawaban')
                                     ->required(),
 
-                                Forms\Components\TextInput::make('score')
-                                    ->label('Skor')
-                                    ->numeric()
-                                    ->required(),
+                                    Forms\Components\Toggle::make('score')
+                                    ->label('Benar/Salah')
+                                    ->onColor('success') // Warna hijau jika benar
+                                    ->offColor('gray') // Warna abu-abu jika salah
+                                    ->inline(false)
+                                    ->default(false), // Default 0 (salah)
                             ]),
                     ])
             ])
