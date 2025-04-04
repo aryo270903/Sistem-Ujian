@@ -1,5 +1,5 @@
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-<div class="md:col-span-2 bg-white shadow-md rounded-lg p-6">
+    <div class="md:col-span-2 bg-white shadow-md rounded-lg p-6">
         @if($tryOut->finished_at == null)
             <div class="text-center mb-4">
                 <h2 class="text-xl font-bold mb-2">Sisa Waktu</h2>
@@ -43,8 +43,6 @@
         </div>
     </div>
 
-
-
     <div class="md:col-span-1 bg-white shadow-md rounded-lg p-6">
         <h2 class="text-2xl font-bold mb-4">Navigasi Soal</h2>
 
@@ -63,12 +61,17 @@
         @endforeach
 
         @if($tryOut->finished_at == null)
-            @php
-                $isLastQuestion = $currentPackageQuestion->id === $questions->last()->id;
-            @endphp
-            <x-filament::button wire:click="goToQuestion" class="btn w-full bg-blue-500 text-white py-2 rounded mt-3">
-                {{ $isLastQuestion ? 'Submit' : 'Next' }}
-            </x-filament::button>
+            <div class="mt-3">
+                <x-filament::button wire:click="goToPreviousQuestion" class="btn w-full bg-gray-300 text-gray-700 py-2 rounded mb-2">
+                    Previous
+                </x-filament::button>
+                @php
+                    $isLastQuestion = $currentPackageQuestion->id === $questions->last()->id;
+                @endphp
+                <x-filament::button wire:click="goToQuestion" class="btn w-full bg-blue-500 text-white py-2 rounded">
+                    {{ $isLastQuestion ? 'Submit' : 'Next' }}
+                </x-filament::button>
+            </div>
         @endif
     </div>
 
@@ -91,15 +94,6 @@
         } else {
             startCountdown(timeLeft, display);
         }
-
-        // Deteksi jika tab tidak aktif atau ditutup
-        document.addEventListener('visibilitychange', function() {
-            if (document.hidden) {
-                if (confirm("Anda akan keluar dari ujian. Apakah Anda ingin menyelesaikan dan mengirim jawaban sekarang?")) {
-                    Livewire.emit('submit');
-                }
-            }
-        });
     });
 
     function startCountdown(duration, display) {
@@ -129,4 +123,12 @@
         });
         window.livewire.emit('disableAll');
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        Livewire.on('showSubmitConfirmation', () => {
+            if (confirm("Apakah Anda yakin ingin mengirim jawaban ini? Mohon periksa kembali.")) {
+                Livewire.emit('submit'); // Jika pilih "Ya", panggil submit()
+            }
+        });
+    });
 </script>

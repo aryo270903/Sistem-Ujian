@@ -83,14 +83,24 @@ class TryoutOnline extends Component
         // Jika pengguna memilih soal secara langsung
         if ($package_question_id) {
             $this->currentPackageQuestion = $this->questions->where('id', $package_question_id)->first();
-        } 
+        }
         // Jika tombol "Next" ditekan
         else if ($currentIndex !== false && $currentIndex < $this->questions->count() - 1) {
             $this->currentPackageQuestion = $this->questions->values()[$currentIndex + 1];
-        } 
+        }
         // Jika soal terakhir, panggil submit()
         else {
             $this->submit();
+        }
+        $this->calculateTimeLeft();
+    }
+
+    public function goToPreviousQuestion()
+    {
+        $currentIndex = $this->questions->search(fn($item) => $item->id === $this->currentPackageQuestion->id);
+
+        if ($currentIndex !== false && $currentIndex > 0) {
+            $this->currentPackageQuestion = $this->questions->values()[$currentIndex - 1];
         }
         $this->calculateTimeLeft();
     }
